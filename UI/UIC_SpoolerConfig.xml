@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:SpoolerConfigSchema.xsd">
+  <template filename="C:\Development\ArcSpooler\Resources\Map_Template.mxd">
+    <masterDataFrame name="main map 1" layerToShift="UIC Map Views" layerKeyField="Mapping_ID" zoomToObject="true" rotateMap="false" highlightLayer="UIC Locations Highlight" highlightField="UNITID" scaleInterval="50">
+      <highlightLayer hide="false" layerName="UIC Locations Highlight" layerField="UNITID" />
+      <highlightLayer hide="true" layerName="All BES UIC's" layerField="UNITID" />
+      <highlightLayer hide="false" layerName="UIC Drainage Basin Highlight" layerField="SUMPID1" />
+      <highlightLayer hide="true" layerName="UIC Subcatchments to Map" layerField="SUMPID1" />
+      <highlightLayer hide="false" layerName="Potential Surface Facilities Browser" layerField="UNITID" />
+      <highlightLayer hide="false" layerName="Potential Surface Facilities Labels" layerField="UNITID" />
+    </masterDataFrame>
+    <dataFrame name="UIC Project Overview" matchMasterZoom="false" />
+    <textField name="main title" modifyTo="Category 3 UICs in Shallow Groundwater Regional Plan" />
+    <textField name="filename" modifyTo="$FILENAME" />
+    <textField name="project number" modifyTo="8811" />
+    <textField name="date" modifyTo="$DATE" />
+    <dynamicTextField baseName="main id" replaceFormat="{0}" modifyToField="UNITID" />
+    <dynamicTextField baseName="comments" replaceFormat="{0}" modifyToField="Comment_Tmplt" boundaryFrame="comments frame" borderXFromBoundary="0.1" borderYFromBoundary="0.1" />
+    <group name="pictures" modifyToField="UNITID">
+      <sql>
+				SELECT UIC_Map_Photos.UNITID, UIC_Map_Photos.Photo_Slot, UIC_Map_Photos.Facility_ID, UIC_Map_Photos.Path_To_Photo, UIC_Map_Photos.Description
+				FROM UIC_Map_Photos
+				WHERE (((UIC_Map_Photos.UNITID)="{0}"))
+				ORDER BY UIC_Map_Photos.Photo_Slot;
+			</sql>
+      <slot field="Photo_Slot" />
+      <dynamicText baseName="image id {0}" replaceFormat="{0}" modifyToField="Facility_ID" />
+      <dynamicText baseName="image description {0}" replaceFormat="{0}" modifyToField="Description" />
+      <dynamicPicture baseName="image frame {0}" modifyToField="Path_To_Photo" />
+    </group>
+    <table name="potential surface facilities" layerName="Potential Surface Facilities Browser" orderByField="ObjectID" />
+  </template>
+  <sourceDatabase>
+    <connectionString>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\\Cassio\gis2\PROJECTS\8292_UIC_RegionalPlan\GIS\PGDB\UIC_Photos_To_Map.mdb;User Id=admin;Password=;</connectionString>
+    <sourceTable>UIC_Locations_To_Map_With_Comments</sourceTable>
+    <sourceField>UNITID</sourceField>
+  </sourceDatabase>
+  <output createMXD="true" createPDF="true" pdfResolution="300">
+    <path>\\Cassio\gis2\PROJECTS\8292_UIC_RegionalPlan\GIS\MXD\Field_Eval_Maps\AllSpool</path>
+	<baseName />
+  </output>
+  <selection name="Cat3">
+    <objectID>ADR045</objectID>
+    <objectID>ADR046</objectID>
+    <objectID>ADR047</objectID>
+    <objectID>ADU200</objectID>
+    <objectID>ADU727</objectID>
+    <objectID>ADU731</objectID>
+    <objectID>ADU757</objectID>
+    <objectID>ADT689</objectID>
+    <objectID>ADT691</objectID>
+    <objectID>ADV121</objectID>
+    <objectID>ADV203</objectID>
+    <objectID>ADV244</objectID>
+    <objectID>ADV955</objectID>
+    <objectID>ADV956</objectID>
+    <objectID>AMR318</objectID>
+    <objectID>AMR771</objectID>
+  </selection>
+  <selection name="All">
+    <objectID>AAC311</objectID>
+    <objectID>AAJ188</objectID>
+    <objectID>ACK357</objectID>
+    <objectID>ACK560</objectID>
+    <objectID>ACK562</objectID>
+    <objectID>ACP682</objectID>
+    <objectID>ACP693</objectID>
+    <objectID>ACQ013</objectID>
+    <objectID>ADP904</objectID>
+    <objectID>ADR045</objectID>
+    <objectID>ADR046</objectID>
+    <objectID>ADR047</objectID>
+    <objectID>ADR048</objectID>
+    <objectID>ADR053</objectID>
+    <objectID>ADT426</objectID>
+    <objectID>ADT428</objectID>
+    <objectID>ADT453</objectID>
+    <objectID>ADT454</objectID>
+    <objectID>ADT455</objectID>
+    <objectID>ADT457</objectID>
+    <objectID>ADT458</objectID>
+    <objectID>ADT463</objectID>
+    <objectID>ADT464</objectID>
+    <objectID>ADT465</objectID>
+    <objectID>ADT466</objectID>
+    <objectID>ADT468</objectID>
+    <objectID>ADT471</objectID>
+    <objectID>ADT472</objectID>
+    <objectID>ADT473</objectID>
+    <objectID>ADT474</objectID>
+    <objectID>ADT475</objectID>
+    <objectID>ADT477</objectID>
+    <objectID>ADT682</objectID>
+    <objectID>ADT683</objectID>
+    <objectID>ADT687</objectID>
+    <objectID>ADT688</objectID>
+    <objectID>ADT689</objectID>
+    <objectID>ADT690</objectID>
+    <objectID>ADT691</objectID>
+    <objectID>ADT696</objectID>
+    <objectID>ADT697</objectID>
+    <objectID>ADT716</objectID>
+    <objectID>ADT730</objectID>
+    <objectID>ADU027</objectID>
+    <objectID>ADU200</objectID>
+    <objectID>ADU205</objectID>
+    <objectID>ADU211</objectID>
+    <objectID>ADU722</objectID>
+    <objectID>ADU727</objectID>
+    <objectID>ADU731</objectID>
+    <objectID>ADU732</objectID>
+    <objectID>ADU734</objectID>
+    <objectID>ADU735</objectID>
+    <objectID>ADU738</objectID>
+    <objectID>ADU743</objectID>
+    <objectID>ADU744</objectID>
+    <objectID>ADU753</objectID>
+    <objectID>ADU755</objectID>
+    <objectID>ADU756</objectID>
+    <objectID>ADU757</objectID>
+    <objectID>ADU758</objectID>
+    <objectID>ADV121</objectID>
+    <objectID>ADV126</objectID>
+    <objectID>ADV130</objectID>
+    <objectID>ADV135</objectID>
+    <objectID>ADV137</objectID>
+    <objectID>ADV144</objectID>
+    <objectID>ADV158</objectID>
+    <objectID>ADV161</objectID>
+    <objectID>ADV168</objectID>
+    <objectID>ADV187</objectID>
+    <objectID>ADV188</objectID>
+    <objectID>ADV189</objectID>
+    <objectID>ADV191</objectID>
+    <objectID>ADV193</objectID>
+    <objectID>ADV196</objectID>
+    <objectID>ADV197</objectID>
+    <objectID>ADV202</objectID>
+    <objectID>ADV203</objectID>
+    <objectID>ADV204</objectID>
+    <objectID>ADV205</objectID>
+    <objectID>ADV244</objectID>
+    <objectID>ADV384</objectID>
+    <objectID>ADV950</objectID>
+    <objectID>ADV955</objectID>
+    <objectID>ADV956</objectID>
+    <objectID>ADV961</objectID>
+    <objectID>ADW229</objectID>
+    <objectID>ADW230</objectID>
+    <objectID>ADW233</objectID>
+    <objectID>ADW256</objectID>
+    <objectID>ADW257</objectID>
+    <objectID>ADW258</objectID>
+    <objectID>ADW261</objectID>
+    <objectID>ADW264</objectID>
+    <objectID>ADW265</objectID>
+    <objectID>ADW266</objectID>
+    <objectID>ADW267</objectID>
+    <objectID>ADW269</objectID>
+    <objectID>ADW271</objectID>
+    <objectID>ADW272</objectID>
+    <objectID>ADW273</objectID>
+    <objectID>ADW274</objectID>
+    <objectID>ADW275</objectID>
+    <objectID>ADW285</objectID>
+    <objectID>ADW303</objectID>
+    <objectID>ADW304</objectID>
+    <objectID>ADW312</objectID>
+    <objectID>ADW313</objectID>
+    <objectID>ADW321</objectID>
+    <objectID>AMQ134</objectID>
+    <objectID>AMR318</objectID>
+    <objectID>AMR553</objectID>
+    <objectID>AMR622</objectID>
+    <objectID>AMR771</objectID>
+    <objectID>AMS283</objectID>
+    <objectID>AMT874</objectID>
+    <objectID>AMX686</objectID>
+    <objectID>AMX688</objectID>
+    <objectID>AMY402</objectID>
+    <objectID>ANA264</objectID>
+    <objectID>ANA271</objectID>
+    <objectID>ANA587</objectID>
+    <objectID>ANA589</objectID>
+    <objectID>ANA596</objectID>
+    <objectID>ANA598</objectID>
+    <objectID>ANA841</objectID>
+    <objectID>ANA889</objectID>
+    <objectID>ANA899</objectID>
+    <objectID>ANA900</objectID>
+    <objectID>ANB179</objectID>
+    <objectID>ANB182</objectID>
+    <objectID>ANB185</objectID>
+  </selection>
+  <selection name="NewUIC_20090219">
+    <objectID>ADQ418</objectID>
+    <objectID>ADV127</objectID>
+    <objectID>ADV951</objectID>
+    <objectID>ADW260</objectID>
+    <objectID>AMQ114</objectID>
+    <objectID>AMV613</objectID>
+    <objectID>ANW740</objectID>
+  </selection>
+  <selection name="ErrorPending">
+    <objectID>ADW260</objectID>
+  </selection>
+</configuration>

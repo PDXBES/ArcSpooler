@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:SpoolerConfigSchema.xsd">
+  <template filename="\\cassio\Storm_SysPlan\SC_Pilot\GIS\Map_Docs\MXD\final\Fanno Creek\Fanno_Map_1.mxd">
+    <masterDataFrame name="Main Map" layerToShift="Field Visit Views" layerKeyField="FID_Text" zoomToObject="false" rotateMap="false" scaleInterval="50" />
+    <textField name="title" modifyTo="Fanno Creek Watershed Field Mapping" boundaryFrame="titlerect" borderXFromBoundary="0.50" borderYFromBoundary="0.05" />
+    <textField name="filename" modifyTo="$FILENAME" />
+    <dynamicTextField baseName="viewname" replaceFormat="View {0} ({1:F})">
+      <fieldSpec name="FID_Text" type="string" />
+    </dynamicTextField>
+    <dynamicTextField baseName="figurenum" replaceFormat="{0}" modifyToField="Figure_ID" />
+    <textField name="date" modifyTo="$DATE" />
+  </template>
+  <sourceDatabase>
+    <connectionString>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\\cassio\Storm_SysPlan\SC_Pilot\GIS\Map_Docs\PGDB\Field_Visit_Views.mdb;User Id=admin;Password=;</connectionString>
+    <sourceTable>FannoViews</sourceTable>
+    <sourceField>FID_Text</sourceField>
+  </sourceDatabase>
+  <output createMXD="true" createPDF="true" pdfResolution="300">
+    <path>C:\Users\arnelm\Temp</path>
+    <baseName />
+  </output>
+  <selection name="ErrorPending">
+    <objectID>Fanno-10</objectID>
+  </selection>
+</configuration>

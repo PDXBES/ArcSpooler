@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio 6.1.18.0 - FREE Community Edition (http://www.liquid-technologies.com)-->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="configuration" type="ConfigDefType">
+    <xs:annotation>
+      <xs:documentation>Root element of a spooler configuration</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ConfigDefType">
+    <xs:annotation>
+      <xs:documentation>Specifies the configuration elements.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="template" type="TemplateType">
+        <xs:annotation>
+          <xs:documentation>Filename of template to use for spooling</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="sourceDatabase" type="SourceDatabaseType">
+        <xs:annotation>
+          <xs:documentation>Specifies database and table from which to draw the individual mapping elements for spooling</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="output" type="OutputType">
+        <xs:annotation>
+          <xs:documentation>Specification for how spooled products will be output</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="selection" type="SelectionType">
+        <xs:annotation>
+          <xs:documentation>Specification for a selections set that will appear in the drop-down for the ArcSpooler UI.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TemplateType">
+    <xs:annotation>
+      <xs:documentation>Specifies the template and options to be used for spooling.</xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="dataFrame" type="DataFrameType">
+        <xs:annotation>
+          <xs:documentation>Specification for the name of a secondary data frame that will follow a master data frame's movement; includes provision for naming a highlight layer</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="masterDataFrame" type="MasterDataFrameType">
+        <xs:annotation>
+          <xs:documentation>Specification for the master data frame that will be used for repositioning as the spooling progresses. Includes specification for the layer (feature class) to shift, whether zooming or rotating are desired, and a highlight layer</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="textField" type="TextType">
+        <xs:annotation>
+          <xs:documentation>Specification for a piece of text that should change as the spool progresses, but is not dependent on a query.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="pictureField" type="PictureType">
+        <xs:annotation>
+          <xs:documentation>Specification of a plain rectangle frame that will act as the bounds for a picture retrieved from a query (generally, if this is so, the query will return a path to the image and not the image itself).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="group" type="GroupType">
+        <xs:annotation>
+          <xs:documentation>A group is a specification of like-named objects that differ only by a number and that should change using a secondary query specified by this element.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="dynamicTextField" type="DynamicTextType">
+        <xs:annotation>
+          <xs:documentation>A dynamic text field is text that changes as the spooling progresses.  It is based on a field retrieved from the sourceDatabase element.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="table" type="TableType">
+        <xs:annotation>
+          <xs:documentation>A table is a simple grid of information tied to the sourceField value of the sourceDatabase's sourceTable</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+    <xs:attribute name="filename" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the MXD file to be used for spooling.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SourceDatabaseType">
+    <xs:annotation>
+      <xs:documentation>Specifies the connection, table, and field to be used for specifying the spooling products.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="connectionString">
+        <xs:annotation>
+          <xs:documentation>The connection string (valid ODBC or OLE DB format) used to connect to the database holding the table to be used for spooling. See connectionstrings.com for proper format.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string" />
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="sourceTable" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The name of the table or view inside the database specified by the connectionString to be used for spooling.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="sourceField" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The name of the field in sourceTable to be used for generating the list of IDs that will be used for spooling.  The spooler will filter this field so that only distinct values are used.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MasterDataFrameType">
+    <xs:annotation>
+      <xs:documentation>Specifies the master data frame in the template and options for spooling.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="highlightLayer" type="HighlightLayerType">
+        <xs:annotation>
+          <xs:documentation>Specification for a layer to use to highlight or hide for the masterDataFrame</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the data mframe in the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layerToShift" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the layer (feature class) that will be used to shift the masterDataFrame.  This layer must have a field (specified by layerKeyField) that is compatible with the sourceField from the sourceTable used for spooling.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="zoomToObject" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Whether the spooler will zoom in to the object specified by the current spooling product.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layerKeyField" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the field that should have a match to the sourceField of the sourceTable used for spooling.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="highlightLayer" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the layer to be used for highlighting.  The spooler will create a definition query using the highlightField and the sourceField value of the spooled product.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="highlightField" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the field in the highlightLayer to be used for highlighting.  The spooler will create a definition query using the highlightField and the sourceField value of the spooled product.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="rotateMap" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Whether the map should rotate if the aspect of the spooled object is significantly different than the aspect of the masterDataFrame</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="scaleInterval" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>When zooming to features, determines the base multiplier to align the zoom scale to.  E.g., if this value is 25, the zoomed scale will ratchet to every 25' (1"=25', 1"=50', 1"=75', 1"=100', etc.).  This value is in feet and assumes 1"=x ft</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DataFrameType">
+    <xs:annotation>
+      <xs:documentation>Specifies a secondary data frame in the template and options for spooling.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="highlightLayer" type="HighlightLayerType">
+        <xs:annotation>
+          <xs:documentation>Specification for a layer to use to highlight or hide for the dataFrame</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the data frame in the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="matchMasterZoom" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Match the zoom scale of the masterDataFrame if true; otherwise maintain the zoom scale as set in the template MXD</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TextType">
+    <xs:annotation>
+      <xs:documentation>Specifies a text field whose value will be replaced during spooling.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the text element in the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="modifyTo" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The text to change the field to.  There are two special modifyTo specs: $FILENAME inserts the filename into the text field, and $DATE inserts the current date into the text field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="boundaryFrame" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of a rectangle element to be used to confine the size the text field using borderXFromBoundary and borderYFromBoundary.  The text element should be a paragraph text box to enable word wrap.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="borderXFromBoundary" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>The number of inches in the horizontal direction to maintain for the text field from the boundaryFrame rectangle element.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="borderYFromBoundary" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>The number of inches in the vertical direction to maintain for the text field from the boundaryFrame rectangle element.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DynamicTextType">
+    <xs:annotation>
+      <xs:documentation>Specifies a text field whose value will be replaced by a field from the sourceTable during spooling.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="fieldSpec" type="FieldSpecType">
+        <xs:annotation>
+          <xs:documentation>A set of field specs to be used in a dynamic field format</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="baseName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the text element to be replaced by a field from the sourceTable.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="modifyToField" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the field from the sourceTable that will be used to replace the text value of the specified field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="replaceFormat" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The format string for the field.  Must include at the very least the {0} specifier as the placeholder for the field value.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="boundaryFrame" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of a rectangle element to be used to confine the size the text field using borderXFromBoundary and borderYFromBoundary.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="borderXFromBoundary" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>The number of inches in the horizontal direction to maintain for the text field from the boundaryFrame rectangle element.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="borderYFromBoundary" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>The number of inches in the vertical direction to maintain for the text field from the boundaryFrame rectangle element.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="PictureType">
+    <xs:annotation>
+      <xs:documentation>Specifies a rectangle element that will house a picture in the specified path (in modifyTo).</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the rectangle element that will house the picture.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="modifyTo" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the picture file that will be used to create the picture in the spooled product.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DynamicPictureType">
+    <xs:annotation>
+      <xs:documentation>Specifies a rectangle element that will house a picture specified by a field  (modifyToField) in sourceTable.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="baseName" type="xs:string" />
+    <xs:attribute name="modifyToField" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="GroupType">
+    <xs:annotation>
+      <xs:documentation>Specifies a group that specifies a secondary query for use in generating related elements to the spooled product.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="sql" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The secondary SQL query that will be used to generate the secondary elements to fill the group slots.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="slot">
+        <xs:annotation>
+          <xs:documentation>Specifies the name of the field in the secondary sql query that will be used for generating the group data</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="field" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The name of the field in the secondary query that will be used for specifying named objects in the template that will be changed by the results of the secondary query.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="text" type="TextType">
+          <xs:annotation>
+            <xs:documentation>A text field for the group.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="picture" type="PictureType">
+          <xs:annotation>
+            <xs:documentation>A picture field for the group.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="dynamicText" type="DynamicTextType">
+          <xs:annotation>
+            <xs:documentation>A dynamic text field for the group.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="dynamicPicture" type="DynamicPictureType">
+          <xs:annotation>
+            <xs:documentation>A dynamic picture field for the group.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the group</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="modifyToField" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the field from the sourceTable that will be used to modify the sql for the group.  The sql element of the group should include a {0} to indicate how this field value will be used in the secondary query, usually in the WHERE clause.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="OutputType">
+    <xs:annotation>
+      <xs:documentation>Specifies how output should be produced.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="1" maxOccurs="1" name="path" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The directory where spooling products should be dumped.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="baseName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Spooling products are formed using basename+sourceField value.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+    <xs:attribute default="false" name="createMXD" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Whether the MXD should be saved.  The filename of the MXD will be the same as the sourceField value for the spooling product with an MXD extension.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="createPDF" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Whether a PDF should be saved.  The filename of the PDF will be the same as the sourceField value for the spooling product with a PDF extension.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="300" name="pdfResolution" type="xs:int" use="optional">
+      <xs:annotation>
+        <xs:documentation>The dots-per-inch resolution of any produced PDFs.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="createJobLog" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies whether a log file is produced</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="geoPDF" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies whether a geoPDF is created (if createPDF is true)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="HighlightLayerType">
+    <xs:annotation>
+      <xs:documentation>Specifies how a layer should be highlighted (or not).
+</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="hide" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether should be hidden (true) - useful for canopy layers where the feature of interest should be punched out frem the rest of the canopy</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layerName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the highlight layer</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layerField" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the field used to determine the feature.  The value must correspond to the values in the sourceField of the sourceDatabase</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TableType">
+    <xs:annotation>
+      <xs:documentation>Specifies a grid of information to be displayed, tied to the sourceField value of the sourceDatabase's sourceTable</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the rectangle element that will be used to house the table.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layerName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the layer to base the table on.  All fields of the layer will be used to generate the table.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="orderByField" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The field on which to sort the table.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SelectionType">
+    <xs:annotation>
+      <xs:documentation>Specifies a selection set for use in a session of ArcSpooler.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="objectID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The sourceField values to be selected when the selection set is chosen from the ArcSpooler's drop-down.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the selection set</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FieldSpecType">
+    <xs:annotation>
+      <xs:documentation>Specifies a field name and type</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the field</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="type" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The type of the field (valid values are int, text, float or double, datetime).</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
